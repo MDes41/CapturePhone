@@ -83,9 +83,9 @@ export class ColoradoSki extends React.Component {
   render() {
     return (
       <ScrollView>
-      <Text>Vail, CO</Text> 
+      <Text style={styles.heading}>Vail, CO</Text> 
       <MountainInfo cameras = {this.state.vailCameras} snow={this.state.vailSnow}/>
-      <Text>Keystone, CO</Text> 
+      <Text style={styles.heading}>Keystone, CO</Text> 
       <MountainInfo cameras = {this.state.keystoneCameras} snow={this.state.keystoneSnow}/>
       </ScrollView>
     );
@@ -99,16 +99,16 @@ class MountainInfo extends React.Component {
         <ListView
           dataSource={this.props.snow}
           renderRow={(rowData) => 
-            <Text>New Snow: {rowData.newSnow} Last 48: {rowData.last48Hours}</Text>
+            <Text style={styles.snowText} >New Snow: {rowData.newSnow} Last 48: {rowData.last48Hours}</Text>
           }
-          style={styles.listView}
+          style={styles.snow}
         />
         <ListView
           dataSource={this.props.cameras}
           renderRow={(rowData) => 
-              <Image source={{uri: `https${rowData.imageURLString.substring(4)}`}} style={{width: 300, height: 200}}/>
+              <Image style={styles.cameras} source={{uri: `https${rowData.imageURLString.substring(4)}`}} style={{width: 300, height: 200}}/>
             }
-          style={styles.listView}
+          style={styles.camerasList}
         />
       </View>
     );
@@ -117,5 +117,20 @@ class MountainInfo extends React.Component {
 
 
 var styles = StyleSheet.create({
-
+  camerasList: {fontSize: 26,
+          flex: 1,
+          padding: 12,
+          flexDirection: 'row',
+          alignSelf: 'center',
+          borderRadius: 20,
+          backgroundColor: 'white',
+          borderStyle: 'solid',
+          borderColor: 'white',
+          borderWidth: 5,
+          marginTop: 20},
+  cameras: {marginBottom: 20},
+  snowText: { fontSize: 26,
+              textAlign: 'center'},
+  heading: {fontSize: 32,
+            textAlign: 'center'}
 });
