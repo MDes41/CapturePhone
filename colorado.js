@@ -17,6 +17,15 @@ export class ColoradoSki extends React.Component {
     title: 'Colorado Forecast',
   };
 
+  constructor(props){
+    super(props);
+    this.state = {forecasts: ''};
+  }
+
+  componentDidMount() {
+    this.getForecastForColorado();
+  }
+
   getForecastForColorado() {
     return fetch('https://api.wunderground.com/api/edee6fe2c5e6281b/forecast/q/CA/San_Francisco.json')
       .then((response) => response.json())
@@ -24,7 +33,7 @@ export class ColoradoSki extends React.Component {
         return responseJson.forecast.simpleforecast.forecastday[0].conditions
       })
       .then((response) => {
-        return response
+        this.setState({forecasts: response})
       })
       .catch((error) => {
         console.error(error);
@@ -32,10 +41,10 @@ export class ColoradoSki extends React.Component {
   }
   
   render() {
-    var forecasts = this.getForecastForColorado()
+    this.getForecastForColorado();
     return (
       <View>
-       <Text>{forecasts}</Text>
+       <Text>{this.state.forecasts}</Text>
       </View>
     );
   }
