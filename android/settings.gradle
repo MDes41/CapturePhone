@@ -1,0 +1,3 @@
+rootProject.name = 'CapturePhone'
+
+include ':app'
