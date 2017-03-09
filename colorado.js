@@ -8,7 +8,9 @@ import {
   Button,
   Fetch,
   ListView,
-  StyleSheet
+  StyleSheet,
+  Image,
+  ScrollView
 } from 'react-native';
 
 import { StackNavigator } from 'react-navigation';
@@ -27,7 +29,11 @@ export class ColoradoSki extends React.Component {
       }),
       keystoneData: new ListView.DataSource({
         rowHasChanged: (row1, row2) => row1 !== row2
+      }),
+      cameras: new ListView.DataSource({
+        rowHasChanged: (row1, row2) => row1 !== row2
       })
+
 
     };
   }
@@ -35,10 +41,11 @@ export class ColoradoSki extends React.Component {
   componentDidMount() {
     this.getForecastForColorado('CO/Vail');
     this.getForecastForColorado('CO/Keystone');
+    this.getWebcamForColorado();
   }
 
   getForecastForColorado(mountain) {
-    return fetch(`https://api.wunderground.com/api/edee6fe2c5e6281b/forecast/q/${mountain}.json`)
+    return fetch(`https://api.wunderground.com/api/ea9af234390ace66/forecast/q/${mountain}.json`)
       .then((response) => response.json())
       .then((responseJson) => {
         return responseJson.forecast.simpleforecast.forecastday
@@ -56,13 +63,40 @@ export class ColoradoSki extends React.Component {
       }).done();
   }
   
+
+  getWebcamForColorado() {
+    return fetch(`https://www.epicmix.com/vailresorts/sites/epicmix/api/mobile/mountaincams.ashx`)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        return responseJson.mountainCameras
+      })
+      .then((response) => {
+        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+          this.setState({cameras: ds.cloneWithRows(response)})
+
+      })
+      .catch((error) => {
+        console.error(error);
+      }).done();
+  }
+
   render() {
     return (
-      <View style={{flex: 1}}>
+      <ScrollView>
       <Text>Vail, CO</Text>
+      <Image source={{ uri: 'https://common.snow.com/Mtncams/midvail.jpg'}} style={{width: 300, height: 200}}/>
         <ListView
           dataSource={this.state.vailData}
           renderRow={(rowData) => <Text>{rowData.snow_allday.cm}</Text>}
+          style={styles.listView}
+        />
+        <ListView
+          dataSource={this.state.cameras}
+          renderRow={(rowData) => {
+            rowData.resortID === 1 
+              ? <Image source={{uri: `https${rowData.imageURLString.substring(4)}`}} style={{width: 300, height: 200}}/>
+              : <Text></Text>
+            }}
           style={styles.listView}
         />
       <Text>Keystone, CO</Text>
@@ -71,13 +105,11 @@ export class ColoradoSki extends React.Component {
           renderRow={(rowData) => <Text>{rowData.snow_allday.cm}</Text>}
           style={styles.listView}
         />
-      </View>
+      </ScrollView>
     );
   }
 }
 
 var styles = StyleSheet.create({
-  listView: {
-        backgroundColor: '#F5FCFF'
-      }
+
 });
