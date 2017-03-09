@@ -10,7 +10,8 @@ import {
   ListView,
   StyleSheet,
   Image,
-  ScrollView
+  ScrollView,
+  TouchableHighlight
 } from 'react-native';
 
 import { StackNavigator } from 'react-navigation';
@@ -84,9 +85,9 @@ export class ColoradoSki extends React.Component {
     return (
       <ScrollView>
       <Text style={styles.heading}>Vail, CO</Text> 
-      <MountainInfo cameras = {this.state.vailCameras} snow={this.state.vailSnow}/>
+      <MountainInfo navigate={this.props.navigation} cameras = {this.state.vailCameras} snow={this.state.vailSnow}/>
       <Text style={styles.heading}>Keystone, CO</Text> 
-      <MountainInfo cameras = {this.state.keystoneCameras} snow={this.state.keystoneSnow}/>
+      <MountainInfo navigate={this.props.navigation} cameras = {this.state.keystoneCameras} snow={this.state.keystoneSnow}/>
       </ScrollView>
     );
   }
@@ -94,6 +95,7 @@ export class ColoradoSki extends React.Component {
 
 class MountainInfo extends React.Component {
   render() {
+    const { navigate } = this.props.navigate
     return (
       <View>
         <ListView
@@ -106,10 +108,25 @@ class MountainInfo extends React.Component {
         <ListView
           dataSource={this.props.cameras}
           renderRow={(rowData) => 
+            <TouchableHighlight onPress={() => navigate('Picture')} title="Picture" image={`https${rowData.imageURLString.substring(4)}`}>
               <Image  source={{uri: `https${rowData.imageURLString.substring(4)}`}} style={styles.cameras}/>
+            </TouchableHighlight>
             }
           style={styles.camerasList}
         />
+      </View>
+    );
+  }
+}
+
+export class Picture extends React.Component {
+  static navigationOptions = {
+    title: 'Picture',
+  };
+  render() {
+    return (
+      <View>
+        <Image source={{uri: this.props.image}} style={styles.fullscreen}/>
       </View>
     );
   }
@@ -129,6 +146,11 @@ var styles = StyleSheet.create({
           borderWidth: 5,
           marginTop: 20},
   cameras: { height: 200,
+              width: 300,
+              borderRadius: 20,
+              paddingBottom: 20,
+              marginBottom: 24},
+  fullscreen: { height: 200,
               width: 300,
               borderRadius: 20,
               paddingBottom: 20,

@@ -9,6 +9,7 @@ import {
 
 import { StackNavigator } from 'react-navigation';
 import { ColoradoSki } from './colorado';
+import { Picture } from './colorado';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -30,7 +31,8 @@ class HomeScreen extends React.Component {
 
 const SimpleApp = StackNavigator({
   Home: { screen: HomeScreen },
-  Chat: { screen: ColoradoSki }
+  Chat: { screen: ColoradoSki },
+  Picture: {screen: Picture}
 });
 
 AppRegistry.registerComponent('CapturePhone', () => SimpleApp);
