@@ -6,7 +6,9 @@ import {
   Text,
   View,
   Button,
-  Fetch
+  Fetch,
+  ListView,
+  StyleSheet
 } from 'react-native';
 
 import { StackNavigator } from 'react-navigation';
@@ -19,7 +21,11 @@ export class ColoradoSki extends React.Component {
 
   constructor(props){
     super(props);
-    this.state = {forecasts: ''};
+    this.state = {
+      dataSource: new ListView.DataSource({
+        rowHasChanged: (row1, row2) => row1 !== row2
+      })
+    };
   }
 
   componentDidMount() {
@@ -30,10 +36,11 @@ export class ColoradoSki extends React.Component {
     return fetch('https://api.wunderground.com/api/edee6fe2c5e6281b/forecast/q/CA/San_Francisco.json')
       .then((response) => response.json())
       .then((responseJson) => {
-        return responseJson.forecast.simpleforecast.forecastday[0].conditions
+        return responseJson.forecast.simpleforecast.forecastday
       })
       .then((response) => {
-        this.setState({forecasts: response})
+        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+        this.setState({dataSource: ds.cloneWithRows(response)})
       })
       .catch((error) => {
         console.error(error);
@@ -41,13 +48,20 @@ export class ColoradoSki extends React.Component {
   }
   
   render() {
-    this.getForecastForColorado();
     return (
-      <View>
-       <Text>{this.state.forecasts}</Text>
+      <View style={{flex: 1}}>
+        <ListView
+          dataSource={this.state.dataSource}
+          renderRow={(rowData) => <Text>{rowData.conditions}</Text>}
+          style={styles.listView}
+        />
       </View>
     );
   }
-
-
 }
+
+var styles = StyleSheet.create({
+  listView: {
+        backgroundColor: '#F5FCFF'
+      }
+});
