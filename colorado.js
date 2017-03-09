@@ -22,25 +22,28 @@ export class ColoradoSki extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      dataSource: new ListView.DataSource({
+      vailData: new ListView.DataSource({
         rowHasChanged: (row1, row2) => row1 !== row2
       })
     };
   }
 
   componentDidMount() {
-    this.getForecastForColorado();
+    this.getForecastForColorado('CO/Vail');
+    this.getForecastForColorado('CO/Keystone');
   }
 
-  getForecastForColorado() {
-    return fetch('https://api.wunderground.com/api/edee6fe2c5e6281b/forecast/q/CA/San_Francisco.json')
+  getForecastForColorado(mountain) {
+    return fetch(`https://api.wunderground.com/api/edee6fe2c5e6281b/forecast/q/${mountain}.json`)
       .then((response) => response.json())
       .then((responseJson) => {
         return responseJson.forecast.simpleforecast.forecastday
       })
       .then((response) => {
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-        this.setState({dataSource: ds.cloneWithRows(response)})
+        if(mountain === 'CO/Vail') {
+          this.setState({vailData: ds.cloneWithRows(response)})
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -50,8 +53,15 @@ export class ColoradoSki extends React.Component {
   render() {
     return (
       <View style={{flex: 1}}>
+      <Text>Vail, CO</Text>
         <ListView
-          dataSource={this.state.dataSource}
+          dataSource={this.state.vailData}
+          renderRow={(rowData) => <Text>{rowData.conditions}</Text>}
+          style={styles.listView}
+        />
+      <Text>Keystone, CO</Text>
+        <ListView
+          dataSource={this.state.vailData}
           renderRow={(rowData) => <Text>{rowData.conditions}</Text>}
           style={styles.listView}
         />
