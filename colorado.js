@@ -106,7 +106,7 @@ class MountainInfo extends React.Component {
         <ListView
           dataSource={this.props.cameras}
           renderRow={(rowData) => 
-              <Image style={styles.cameras} source={{uri: `https${rowData.imageURLString.substring(4)}`}} style={{width: 300, height: 200}}/>
+              <Image  source={{uri: `https${rowData.imageURLString.substring(4)}`}} style={styles.cameras}/>
             }
           style={styles.camerasList}
         />
@@ -128,7 +128,11 @@ var styles = StyleSheet.create({
           borderColor: 'white',
           borderWidth: 5,
           marginTop: 20},
-  cameras: {marginBottom: 20},
+  cameras: { height: 200,
+              width: 300,
+              borderRadius: 20,
+              paddingBottom: 20,
+              marginBottom: 24},
   snowText: { fontSize: 26,
               textAlign: 'center'},
   heading: {fontSize: 32,
