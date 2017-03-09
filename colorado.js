@@ -24,7 +24,11 @@ export class ColoradoSki extends React.Component {
     this.state = {
       vailData: new ListView.DataSource({
         rowHasChanged: (row1, row2) => row1 !== row2
+      }),
+      keystoneData: new ListView.DataSource({
+        rowHasChanged: (row1, row2) => row1 !== row2
       })
+
     };
   }
 
@@ -43,6 +47,8 @@ export class ColoradoSki extends React.Component {
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
         if(mountain === 'CO/Vail') {
           this.setState({vailData: ds.cloneWithRows(response)})
+        } else if (mountain === 'CO/Keystone') {
+          this.setState({keystoneData: ds.cloneWithRows(response)})
         }
       })
       .catch((error) => {
@@ -56,13 +62,13 @@ export class ColoradoSki extends React.Component {
       <Text>Vail, CO</Text>
         <ListView
           dataSource={this.state.vailData}
-          renderRow={(rowData) => <Text>{rowData.conditions}</Text>}
+          renderRow={(rowData) => <Text>{rowData.snow_allday.cm}</Text>}
           style={styles.listView}
         />
       <Text>Keystone, CO</Text>
         <ListView
-          dataSource={this.state.vailData}
-          renderRow={(rowData) => <Text>{rowData.conditions}</Text>}
+          dataSource={this.state.keystoneData}
+          renderRow={(rowData) => <Text>{rowData.snow_allday.cm}</Text>}
           style={styles.listView}
         />
       </View>
