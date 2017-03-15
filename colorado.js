@@ -88,6 +88,10 @@ export class ColoradoSki extends React.Component {
       <MountainInfo navigate={this.props.navigation} cameras = {this.state.vailCameras} snow={this.state.vailSnow}/>
       <Text style={styles.heading}>Keystone, CO</Text> 
       <MountainInfo navigate={this.props.navigation} cameras = {this.state.keystoneCameras} snow={this.state.keystoneSnow}/>
+      <Text style={styles.heading}>Abasin, CO</Text> 
+      <TouchableHighlight onPress={() => navigate('Picture')} title="Picture" image={`http://arapahoebasin.com/ABasin/assets/images/webcams/webcam6/abasincam6.jpg`}>
+        <Image  source={{uri: 'http://arapahoebasin.com/ABasin/assets/images/webcams/webcam6/abasincam6.jpg'}} style={styles.cameras}/>
+      </TouchableHighlight>
       </ScrollView>
     );
   }
@@ -108,7 +112,7 @@ class MountainInfo extends React.Component {
         <ListView
           dataSource={this.props.cameras}
           renderRow={(rowData) => 
-            <TouchableHighlight onPress={() => navigate('Picture')} title="Picture" image={`https${rowData.imageURLString.substring(4)}`}>
+            <TouchableHighlight onPress={() => navigate('Picture', {image: `https${rowData.imageURLString.substring(4)}`})} title="Picture" >
               <Image  source={{uri: `https${rowData.imageURLString.substring(4)}`}} style={styles.cameras}/>
             </TouchableHighlight>
             }
@@ -125,13 +129,12 @@ export class Picture extends React.Component {
   };
   render() {
     return (
-      <View>
-        <Image source={{uri: this.props.image}} style={styles.fullscreen}/>
+      <View style={{flexDirection:'row', flex: 1}}>
+        <Image source={{uri: this.props.navigation.state.params.image}} style={{flex: 1, resizeMode: "contain", width: null, height: null}}/>
       </View>
     );
   }
 }
-
 
 var styles = StyleSheet.create({
   camerasList: {fontSize: 26,
@@ -150,11 +153,9 @@ var styles = StyleSheet.create({
               borderRadius: 20,
               paddingBottom: 20,
               marginBottom: 24},
-  fullscreen: { height: 200,
-              width: 300,
-              borderRadius: 20,
-              paddingBottom: 20,
-              marginBottom: 24},
+  fullscreen: { flex:1,
+                width: null,
+                height: null },
   snowText: { fontSize: 26,
               textAlign: 'center'},
   heading: {fontSize: 32,

@@ -32,7 +32,7 @@ class HomeScreen extends React.Component {
 const SimpleApp = StackNavigator({
   Home: { screen: HomeScreen },
   Chat: { screen: ColoradoSki },
-  Picture: {screen: Picture}
+  Picture: {screen: Picture }
 });
 
 AppRegistry.registerComponent('CapturePhone', () => SimpleApp);
